@@ -28,7 +28,7 @@ prost = "0.12"
 rusqlite = "0.29"
 sapling = { package = "sapling-crypto", version = "0.3" }
 schemer = "0.2"
-secrecy = "0.8.0"
+secrecy = "0.10.0"
 thiserror = "1.0"
 time = "0.3.31"
 tracing = "0.1"
