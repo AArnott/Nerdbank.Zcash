@@ -24,7 +24,7 @@ minreq = "2.11.0"
 nonempty = "0.7"
 orchard = { version = "0.10", default-features = false }
 pasta_curves = "0.5"
-prost = "0.12"
+prost = "0.13"
 rusqlite = "0.29"
 sapling = { package = "sapling-crypto", version = "0.3" }
 schemer = "0.2"
