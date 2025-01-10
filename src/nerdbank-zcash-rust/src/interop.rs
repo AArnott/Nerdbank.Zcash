@@ -14,13 +14,17 @@ use secrecy::SecretVec;
 use tokio::runtime::Runtime;
 use tokio_util::sync::CancellationToken;
 use zcash_client_backend::{
-    data_api::{Account, AccountPurpose, WalletRead},
+    data_api::{Account, AccountPurpose, WalletRead, WalletWrite},
     encoding::AddressCodec,
     keys::{Era, UnifiedSpendingKey},
 };
 use zcash_client_sqlite::error::SqliteClientError;
 use zcash_keys::keys::UnifiedFullViewingKey;
-use zcash_primitives::{consensus::Network, legacy::TransparentAddress, zip32::DiversifierIndex};
+use zcash_primitives::{
+    consensus::{BlockHeight, Network},
+    legacy::TransparentAddress,
+    zip32::DiversifierIndex,
+};
 
 use crate::{
     analysis::{BirthdayHeights, UserBalances},
@@ -575,6 +579,19 @@ pub fn shield(
                 .collect::<Vec<_>>(),
         )
     })
+}
+
+pub fn rescan(config: DbInit, block_height: u32) -> Result<(), LightWalletError> {
+    let network = config.network.into();
+    let mut db = Db::init(config.data_file, network)?;
+    db.data
+        .truncate_to_height(BlockHeight::from_u32(block_height))?;
+    Ok(())
+}
+
+pub fn get_min_unspent_height(config: DbInit) -> Result<Option<u32>, LightWalletError> {
+    let db = Db::load(config.data_file, config.network.into())?;
+    Ok(db.data.get_min_unspent_height()?.map(|h| h.into()))
 }
 
 #[cfg(test)]

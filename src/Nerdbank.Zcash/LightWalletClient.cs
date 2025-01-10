@@ -185,6 +185,25 @@ public partial class LightWalletClient : IDisposable
 	}
 
 	/// <summary>
+	/// Gets the minimum block height corresponding to an unspent note in the wallet.
+	/// </summary>
+	/// <returns>The minimum block height, or <see langword="null" /> if there are no unspent notes.</returns>
+	public uint? GetMinUnspentHeight() => LightWalletMethods.GetMinUnspentHeight(this.dbinit);
+
+	/// <summary>
+	/// Invalidates any scanned blocks beyond a given block.
+	/// </summary>
+	/// <param name="blockHeight">
+	/// The height of the last block to consider valid.
+	/// This must either be within 100 blocks of the current tip (<see cref="GetLatestBlockHeightAsync(CancellationToken)"/>,
+	/// or less than the height of the oldest unspent note in the wallet (<see cref="GetMinUnspentHeight"/>).
+	/// </param>
+	/// <remarks>
+	/// This method can be very slow, and should not be run concurrently with <see cref="DownloadTransactionsAsync"/>.
+	/// </remarks>
+	public void Rescan(uint blockHeight) => LightWalletMethods.Rescan(this.dbinit, blockHeight);
+
+	/// <summary>
 	/// Records a diversifier index as having been used by the given account.
 	/// </summary>
 	/// <param name="account">The account to associate with the diversifier index.</param>
