@@ -125,6 +125,9 @@ namespace LightWallet {
 	u32? get_birthday_height(DbInit config);
 
 	[Throws=LightWalletError]
+	u32? get_min_unspent_height(DbInit config);
+
+	[Throws=LightWalletError]
 	u32 get_block_height(string uri, CancellationSource? cancellation);
 
 	[Throws=LightWalletError]
@@ -162,4 +165,11 @@ namespace LightWallet {
 
 	[Throws=LightWalletError]
 	string add_diversifier(DbInit config, u32 account_id, bytes diversifier_index);
+
+	/// Resets the database to consider the specified block height to be the tip, such that the next
+	/// scan begins from there.
+	/// The block height must be either within 100 of the current tip (get_block_height)
+	/// so no greater than the oldest unspent input (get_min_unspent_height).
+	[Throws=LightWalletError]
+	void rescan(DbInit config, u32 block_height);
 };

@@ -591,6 +591,12 @@ static class _UniFFILib
 	);
 
 	[DllImport("nerdbank_zcash_rust")]
+	public static extern RustBuffer uniffi_nerdbank_zcash_rust_fn_func_get_min_unspent_height(
+		RustBuffer @config,
+		ref RustCallStatus _uniffi_out_err
+	);
+
+	[DllImport("nerdbank_zcash_rust")]
 	public static extern RustBuffer uniffi_nerdbank_zcash_rust_fn_func_get_sync_height(
 		RustBuffer @config,
 		ref RustCallStatus _uniffi_out_err
@@ -631,6 +637,13 @@ static class _UniFFILib
 
 	[DllImport("nerdbank_zcash_rust")]
 	public static extern void uniffi_nerdbank_zcash_rust_fn_func_init(RustBuffer @config, ref RustCallStatus _uniffi_out_err);
+
+	[DllImport("nerdbank_zcash_rust")]
+	public static extern void uniffi_nerdbank_zcash_rust_fn_func_rescan(
+		RustBuffer @config,
+		uint @blockHeight,
+		ref RustCallStatus _uniffi_out_err
+	);
 
 	[DllImport("nerdbank_zcash_rust")]
 	public static extern RustBuffer uniffi_nerdbank_zcash_rust_fn_func_send(
@@ -874,6 +887,9 @@ static class _UniFFILib
 	public static extern ushort uniffi_nerdbank_zcash_rust_checksum_func_get_block_height();
 
 	[DllImport("nerdbank_zcash_rust")]
+	public static extern ushort uniffi_nerdbank_zcash_rust_checksum_func_get_min_unspent_height();
+
+	[DllImport("nerdbank_zcash_rust")]
 	public static extern ushort uniffi_nerdbank_zcash_rust_checksum_func_get_sync_height();
 
 	[DllImport("nerdbank_zcash_rust")]
@@ -890,6 +906,9 @@ static class _UniFFILib
 
 	[DllImport("nerdbank_zcash_rust")]
 	public static extern ushort uniffi_nerdbank_zcash_rust_checksum_func_init();
+
+	[DllImport("nerdbank_zcash_rust")]
+	public static extern ushort uniffi_nerdbank_zcash_rust_checksum_func_rescan();
 
 	[DllImport("nerdbank_zcash_rust")]
 	public static extern ushort uniffi_nerdbank_zcash_rust_checksum_func_send();
@@ -1001,6 +1020,16 @@ static class _UniFFILib
 			}
 		}
 		{
+			var checksum =
+				_UniFFILib.uniffi_nerdbank_zcash_rust_checksum_func_get_min_unspent_height();
+			if (checksum != 51541)
+			{
+				throw new UniffiContractChecksumException(
+					$"uniffi.LightWallet: uniffi bindings expected function `uniffi_nerdbank_zcash_rust_checksum_func_get_min_unspent_height` checksum `51541`, library returned `{checksum}`"
+				);
+			}
+		}
+		{
 			var checksum = _UniFFILib.uniffi_nerdbank_zcash_rust_checksum_func_get_sync_height();
 			if (checksum != 61447)
 			{
@@ -1051,6 +1080,15 @@ static class _UniFFILib
 			{
 				throw new UniffiContractChecksumException(
 					$"uniffi.LightWallet: uniffi bindings expected function `uniffi_nerdbank_zcash_rust_checksum_func_init` checksum `2047`, library returned `{checksum}`"
+				);
+			}
+		}
+		{
+			var checksum = _UniFFILib.uniffi_nerdbank_zcash_rust_checksum_func_rescan();
+			if (checksum != 9888)
+			{
+				throw new UniffiContractChecksumException(
+					$"uniffi.LightWallet: uniffi bindings expected function `uniffi_nerdbank_zcash_rust_checksum_func_rescan` checksum `9888`, library returned `{checksum}`"
 				);
 			}
 		}
@@ -2943,6 +2981,21 @@ internal static class LightWalletMethods
 	}
 
 	/// <exception cref="LightWalletException"></exception>
+	public static uint? GetMinUnspentHeight(DbInit @config)
+	{
+		return FfiConverterOptionalUInt32.INSTANCE.Lift(
+			_UniffiHelpers.RustCallWithError(
+				FfiConverterTypeLightWalletException.INSTANCE,
+				(ref RustCallStatus _status) =>
+					_UniFFILib.uniffi_nerdbank_zcash_rust_fn_func_get_min_unspent_height(
+						FfiConverterTypeDbInit.INSTANCE.Lower(@config),
+						ref _status
+					)
+			)
+		);
+	}
+
+	/// <exception cref="LightWalletException"></exception>
 	public static uint? GetSyncHeight(DbInit @config)
 	{
 		return FfiConverterOptionalUInt32.INSTANCE.Lift(
@@ -3040,6 +3093,26 @@ internal static class LightWalletMethods
 			FfiConverterTypeLightWalletException.INSTANCE,
 			(ref RustCallStatus _status) =>
 				_UniFFILib.uniffi_nerdbank_zcash_rust_fn_func_init(FfiConverterTypeDbInit.INSTANCE.Lower(@config), ref _status)
+		);
+	}
+
+	/// <summary>
+	/// Resets the database to consider the specified block height to be the tip, such that the next
+	/// scan begins from there.
+	/// The block height must be either within 100 of the current tip (get_block_height)
+	/// so no greater than the oldest unspent input (get_min_unspent_height).
+	/// </summary>
+	/// <exception cref="LightWalletException"></exception>
+	public static void Rescan(DbInit @config, uint @blockHeight)
+	{
+		_UniffiHelpers.RustCallWithError(
+			FfiConverterTypeLightWalletException.INSTANCE,
+			(ref RustCallStatus _status) =>
+				_UniFFILib.uniffi_nerdbank_zcash_rust_fn_func_rescan(
+					FfiConverterTypeDbInit.INSTANCE.Lower(@config),
+					FfiConverterUInt32.INSTANCE.Lower(@blockHeight),
+					ref _status
+				)
 		);
 	}
 
