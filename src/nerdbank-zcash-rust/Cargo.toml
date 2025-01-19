@@ -25,7 +25,7 @@ nonempty = "0.7"
 orchard = { version = "0.10", default-features = false }
 pasta_curves = "0.5"
 prost = "0.12"
-rusqlite = "0.29"
+rusqlite = "0.33"
 sapling = { package = "sapling-crypto", version = "0.3" }
 schemer = "0.2"
 secrecy = "0.8.0"
